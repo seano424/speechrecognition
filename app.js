@@ -13,16 +13,20 @@ const spain = document.querySelector('.sp');
 const cards = document.querySelectorAll('.card');
 const hiddenDisplay = [...document.querySelectorAll('.hidden')];
 const words = document.querySelector('.words');
+const displayP = document.querySelector('.display-p');
+const displaySpan = document.querySelector('.display-span');
 
 // console.log(hiddenDisplay[0].classList.contains("hidden"));
 let wordsDisplay = false;
 let simSalaBim = false;
-let p = document.createElement('p');
 
-words.appendChild(p);
+// let p = document.createElement('p');
+// words.appendChild(p);
+
 cards.forEach(card => card.style.visibility = "hidden")
 words.style.visibility = "hidden";
 woot.style.visibility = "hidden";
+displayP.style.visibility = "hidden";
 
 recognition.addEventListener('result', e => {
   // console.log(e.results);
@@ -30,11 +34,14 @@ recognition.addEventListener('result', e => {
     .map(result => result[0])
     .map(result => result.transcript)
     .join("")
-
+    
+    let p = document.createElement('p');
     p.textContent = transcript;
+    words.appendChild(p);
+    displaySpan.textContent = transcript;
+
     if(e.results[0].isFinal) {
-      p = document.createElement('p');
-      words.appendChild(p);
+      // displaySpan.textContent = transcript;
     }
 
     if(transcript.includes('unicorn')) {
@@ -43,18 +50,20 @@ recognition.addEventListener('result', e => {
 
     abracadabra(transcript);
     success(displayWord, transcript);
-    
-    if(transcript.includes('Sim Sala Bim')) {
-      woot.classList.add("finale");
-      cards.forEach(card => card.classList.add('finale'));
-      words.classList.add('show');
-      displayWord.textContent = "Keep talking if you want. Go again? Say Abracadabra";
-      if(transcript.includes('unicorn')) {
+    simSala(displayWord, transcript);
+    // console.log(transcript);
+});
 
-      }
-    }
-    console.log(transcript);
-})
+
+function simSala(displayWord, transcript) {
+  if(transcript.includes('Sim Sala Bim')) {
+    woot.classList.add("finale");
+    cards.forEach(card => card.classList.add('finale'));
+    words.classList.add('show');
+    displayWord.textContent = "Keep talking if you want. Go again? Say Abracadabra";
+    displayP.style.visibility = "visible";
+  }
+}
 
 function isHidden() {
   let times = 0;
@@ -65,12 +74,15 @@ function isHidden() {
     if (times >= 4) {
       cards.forEach(card => card.classList.add('finale'));
       woot.classList.add("show");
+      displayP.style.visibility = "hidden";
     }
   })
 }
 
 function abracadabra(transcript) {
   if(transcript.includes('abracadabra')) {
+    woot.classList.remove("finale", "show");
+    displayP.style.visibility = "visible";
     console.log('👻');
     cards.forEach(card => card.classList.add('show'));
     cards.forEach(card => card.classList.remove('finale'));
@@ -82,7 +94,7 @@ function abracadabra(transcript) {
 }
 
 function success(displayWord, transcript) {
-  if(displayWord.textContent === "Now can you guess the country?") {
+  if(displayWord.textContent.includes("Now can you guess the country?")) {
     if(transcript.includes('France')) {
       console.log("🥐");
       france.classList.add('cover');
