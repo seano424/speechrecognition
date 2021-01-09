@@ -39,35 +39,19 @@ recognition.addEventListener('result', e => {
 
     if(transcript.includes('unicorn')) {
       console.log("🦄");
-    } else if(transcript.includes('abracadabra')) {
-      console.log('👻');
-      cards.forEach(card => card.classList.add('show'));
-      magicWord.textContent = "";
-      displayWord.textContent = "Now can you guess the country?"
     }
-    if(displayWord.textContent === "Now can you guess the country?") {
-      if(transcript.includes('France')) {
-        console.log("🥐");
-        france.classList.add('cover');
-        isHidden();
-      } else if(transcript.includes('Japan')) {
-        console.log("🍣");
-        japan.classList.add('cover')
-        isHidden();
-      } else if(transcript.includes('Spain')) {
-        console.log("🐂");
-        spain.classList.add('cover');
-        isHidden();
-      } else if(transcript.includes('Greece')) {
-        console.log("🗻");
-        greece.classList.add('cover');
-        isHidden();
-      }
-    }
+
+    abracadabra(transcript);
+    success(displayWord, transcript);
+    
     if(transcript.includes('Sim Sala Bim')) {
       woot.classList.add("finale");
       cards.forEach(card => card.classList.add('finale'));
       words.classList.add('show');
+      displayWord.textContent = "Keep talking if you want. Go again? Say Abracadabra";
+      if(transcript.includes('unicorn')) {
+
+      }
     }
     console.log(transcript);
 })
@@ -85,5 +69,39 @@ function isHidden() {
   })
 }
 
+function abracadabra(transcript) {
+  if(transcript.includes('abracadabra')) {
+    console.log('👻');
+    cards.forEach(card => card.classList.add('show'));
+    cards.forEach(card => card.classList.remove('finale'));
+    hiddenDisplay.forEach(card => card.classList.remove('cover'));
+    magicWord.textContent = "";
+    displayWord.textContent = "Now can you guess the country?";
+    words.classList.remove('show');
+  }
+}
+
+function success(displayWord, transcript) {
+  if(displayWord.textContent === "Now can you guess the country?") {
+    if(transcript.includes('France')) {
+      console.log("🥐");
+      france.classList.add('cover');
+      isHidden();
+    } else if(transcript.includes('Japan')) {
+      console.log("🍣");
+      japan.classList.add('cover')
+      isHidden();
+    } else if(transcript.includes('Spain')) {
+      console.log("🐂");
+      spain.classList.add('cover');
+      isHidden();
+    } else if(transcript.includes('Greece')) {
+      console.log("🗻");
+      greece.classList.add('cover');
+      isHidden();
+    }
+  }
+}
+ 
 recognition.addEventListener('end', recognition.start)
 recognition.start();
